@@ -138,7 +138,7 @@ def generate_fake_data():
             #
             if (gera_prob(PROB_FRAUDE_MESMO_IMEI)):
                 qual_imei = np.random.randint(len(IMEI_FRAUDULENTOS) - 1)
-                usuarios[i][-1] = IMEI_FRAUDULENTOS[qual_imei]
+                usuarios[i][-2] = IMEI_FRAUDULENTOS[qual_imei]
                 print(f"{i}")
     #    
 
