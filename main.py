@@ -1,87 +1,52 @@
 import csv
 import datetime
 import random
-# import requests
-
+import numpy as np
 from faker import Faker
-# from gerador_endereco import *
+from util import *
 
-# def getAddress(cep):
-#     r = requests.get(f'https://viacep.com.br/ws/{cep}/json/')
-#     r.status_code
-#     return r.json()
+QUANTIDADE_REGISTROS = 100
+PROB_FRAUDULENTO = 0.2
+SEED = 77
+
 
 def generate_fake_data():
-    fake = Faker(['pt_BR'])
+    np.random.seed(SEED)
     Faker.seed(0)
+    fake = Faker(['pt_BR'])
+    f = open('hack_day_dataset.csv', 'w', encoding='UTF8')
+    writer = csv.writer(f)
+    #writer.writerow(header)
 
-    # address = getAddress()
 
-    header = [
-        'nome',
-        'email',
-        'cpf',
-        'telefone',
-        'rua',
-        'bairro',
-        'cidade',
-        'estado',
-        'endereco',
-        'cep',
-        'data_de_nascimento',
-        'produto',
-        'restringido',  # está com dados na lista restritiva
-        'bloqueado',  # está bloqueado
-        # 'user_agent'
-    ]
+    for usuario_i in range(QUANTIDADE_REGISTROS):
+        # diz se esse usuário é fraudulento ou não
+        is_fraude = gera_prob(PROB_FRAUDULENTO)
 
-    produtos = [
-        'Globoplay + canais ao vivo e Telecine',
-        'Starzplay',
-        'Deezer Premium',
-        'Cartola PRO',
-        'Globoplay',
-        'Globoplay + canais ao vivo e Premiere',
-        'Disney +',
-        'Premiere',
-        'Globoplay e discovery +',
-        'discovery +',
-        'Globo Mais',
-        'Globoplay e Disney +',
-        'Combate',
-        'Globoplay e Premiere',
-        'Giga Gloob',
-        'Globoplay + canais ao vivo',
-        'Globoplay e Telecine',
-        'Globoplay e Starzplay',
-        'Globoplay + canais ao vivo e Disney +'
-    ]
-
-    # open the file in the write mode
-    with open('hack_day_dataset.csv', 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
-        writer.writerow(header)
-
-        for _ in range(100):
-            data = [
-                fake.name(),
-                fake.email(),
-                fake.ssn(),
-                fake.cellphone_number(),
-                fake.street_name(),
-                fake.bairro(),
-                fake.city(),
-                fake.estado_nome(),
-                fake.address(),
-                fake.postcode(),
-                fake.date_between_dates(datetime.date(1960, 1, 1), datetime.date(2012, 1, 1)),
-                random.choice(produtos),
-                fake.boolean(chance_of_getting_true=5),
-                fake.boolean(chance_of_getting_true=5),
-                # fake.user_agent()
+        # gera nome
+        nome, sobrenome, email = gera_nome_e_email(fake, is_fraude)
+        print(nome, sobrenome, email)
+        data = [
+            nome,
+            sobrenome,
+            email,
+            # fake.ssn(),
+            # fake.cellphone_number(),
+            # fake.street_name(),
+            # fake.bairro(),
+            # fake.city(),
+            # fake.estado_nome(),
+            # fake.address(),
+            # fake.postcode(),
+            # fake.date_between_dates(datetime.date(1960, 1, 1), datetime.date(2012, 1, 1)),
+            # random.choice(produtos),
+            # fake.boolean(chance_of_getting_true=5),
+            # fake.boolean(chance_of_getting_true=5),
+            # fake.user_agent()
             ]
-
-            writer.writerow(data)
+        writer.writerow(data)
+      
+    f.close()
 
 
 if __name__ == '__main__':
