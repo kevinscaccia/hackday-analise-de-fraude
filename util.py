@@ -6,10 +6,18 @@ import re
 PROB_EMAIL_FRAUDE_EMAIL_COM_NOME = 0.2
 PROB_EMAIL_FRAUDE_SOBRENOME_CERTO = 0.2
 PROB_EMAIL_FRAUDE_EMAIL_ERRADO = 0.5 
+PROB_EMAIL_FRAUDE_PRODUTO_NO_EMAIL = 0.5
 #
 PROB_EMAIL_REAL_EMAIL_COM_NOME = 0.8
+PROB_DOMINIO_REAL_DIFERENTE_PADRAO = 0.1
+PROB_DOMINIO_FRAUDE_DIFERENTE_PADRAO = 0.2
+PROB_EMAIL_FRAUDE_NUMERO_NO_EMAIL = 0.4
+MAX_NUMEROS_EMAIL_FRAUDE = 9999999
+DOMINIOS_VALIDOS = ['gmail.com','globo.com','outlook.com','bol.com','hotmail.com','yahoo.com']
 
-def gera_nome_e_email(fake, fraude=False):
+
+
+def gera_nome_e_email(fake, produto, fraude=False):
   first_name = fake.first_name()
   last_name = fake.last_name()
   domain_name = fake.domain_name()
@@ -24,13 +32,32 @@ def gera_nome_e_email(fake, fraude=False):
       if gera_prob(PROB_EMAIL_FRAUDE_EMAIL_COM_NOME):
         email += trata_string(first_name) + "."
       last_name_c = trata_string(last_name)
-      email = f"{email}{last_name_c}@{domain_name}"
+
+      if not gera_prob(PROB_DOMINIO_FRAUDE_DIFERENTE_PADRAO):
+        domain_name = random.choice(DOMINIOS_VALIDOS)
+
+      
+
+      # produto no email
+      if gera_prob(PROB_EMAIL_FRAUDE_PRODUTO_NO_EMAIL) and len(produto) > 0:
+        email = f"{trata_string(produto)}.{last_name_c}@{domain_name}"
+      else:
+        email = f"{email}{last_name_c}@{domain_name}"
+      #
+      if gera_prob(PROB_EMAIL_FRAUDE_NUMERO_NO_EMAIL):
+        num = np.random.randint(999, MAX_NUMEROS_EMAIL_FRAUDE)
+        email = str(num) + email
+
   else:
     # email com dados certos
     if gera_prob(PROB_EMAIL_REAL_EMAIL_COM_NOME):
       email += trata_string(first_name) + "."
     #
     last_name_c = trata_string(last_name)
+  
+    if not gera_prob(PROB_DOMINIO_REAL_DIFERENTE_PADRAO):
+      domain_name = random.choice(DOMINIOS_VALIDOS)
+    
     email = f"{email}{last_name_c}@{domain_name}"
 
 
@@ -43,6 +70,11 @@ def gera_nome_e_email(fake, fraude=False):
 def gera_prob(prob):
   return random.random() <= prob
 
+
+def gera_vazio(campo, prob):
+  if gera_prob(prob):
+    return campo
+  return ""
 
 def trata_string(string):
   string = re.sub('[^A-Za-z0-9]+', '', string)
