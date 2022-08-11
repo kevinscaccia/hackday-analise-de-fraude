@@ -134,8 +134,6 @@ def imei_calc_check_digit(number, alphabet='0123456789'):
 
 
 def get_imei(phone_number):
-    random.seed(0)
-
     imei = phone_number
 
     # Randomly compute the remaining serial number digits
