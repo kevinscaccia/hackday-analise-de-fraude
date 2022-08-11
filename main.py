@@ -49,8 +49,7 @@ HEADER = [
     'restringido',  # está com dados na lista restritiva
     'bloqueado',  # está bloqueado
     'user_agent',
-    'imei',
-    'ip'
+    'imei'
 ]
 
 PROB_CPF_VAZIO = 1 - 0.2
@@ -102,6 +101,7 @@ def generate_fake_data():
 
         cpf = fake.ssn()
         imei = get_imei(phone)
+
         if is_fraude:
             CPF_FRAUDULENTOS.append(cpf)
             IMEI_FRAUDULENTOS.append(imei)
@@ -120,8 +120,7 @@ def generate_fake_data():
             fake.boolean(chance_of_getting_true=5),
             fake.boolean(chance_of_getting_true=5),
             fake.user_agent(),
-            imei,
-            fake.ipv4_public()
+            imei
         ]
         usuarios.append(data)
     #
