@@ -55,7 +55,8 @@ def generate_fake_data():
         'produto',
         'restringido',  # está com dados na lista restritiva
         'bloqueado',  # está bloqueado
-        # 'user_agent'
+        'user_agent',
+        'imei'
     ]
 
     produtos = [
@@ -86,13 +87,15 @@ def generate_fake_data():
         writer.writerow(header)
 
         for _ in range(100):
+            phone = fake.msisdn()
+
             cep = random.choice(ceps)
 
             data = [
                 fake.name(),
                 fake.email(),
                 fake.ssn(),
-                fake.cellphone_number(),
+                phone,
                 addresses[cep]['street'],
                 addresses[cep]['neighborhood'],
                 addresses[cep]['city'],
@@ -102,10 +105,46 @@ def generate_fake_data():
                 random.choice(produtos),
                 fake.boolean(chance_of_getting_true=5),
                 fake.boolean(chance_of_getting_true=5),
-                # fake.user_agent()
+                fake.user_agent(),
+                get_imei(phone)
             ]
 
             writer.writerow(data)
+
+
+# Src: https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/luhn.py
+def imei_checksum(number, alphabet='0123456789'):
+    """
+    Calculate the Luhn checksum over the provided number.
+    The checksum is returned as an int.
+    Valid numbers should have a checksum of 0.
+    """
+    n = len(alphabet)
+    number = tuple(alphabet.index(i)
+                   for i in reversed(str(number)))
+    return (sum(number[::2]) +
+            sum(sum(divmod(i * 2, n))
+                for i in number[1::2])) % n
+
+
+def imei_calc_check_digit(number, alphabet='0123456789'):
+    """Calculate the extra digit."""
+    check_digit = imei_checksum(number + alphabet[0])
+    return alphabet[-check_digit]
+
+
+def get_imei(phone_number):
+    random.seed(0)
+
+    imei = phone_number
+
+    # Randomly compute the remaining serial number digits
+    while len(imei) < 14:
+        imei += str(random.randint(0, 9))
+
+    # Calculate the check digit with the Luhn algorithm
+    imei += imei_calc_check_digit(imei)
+    return imei
 
 
 if __name__ == '__main__':
