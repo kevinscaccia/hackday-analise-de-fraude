@@ -1,21 +1,45 @@
 import csv
 import datetime
 import random
-# import requests
 
 from faker import Faker
-# from gerador_endereco import *
 
-# def getAddress(cep):
-#     r = requests.get(f'https://viacep.com.br/ws/{cep}/json/')
-#     r.status_code
-#     return r.json()
+
+def get_ceps():
+    ceps = []
+    with open('address.txt') as f:
+        for line in f.readlines():
+            formatted_line = line.replace('\n', '').split("	")
+            ceps.append(formatted_line[0])
+    return ceps
+
+
+def get_addresses():
+    address_by_cep = {}
+    with open('address.txt') as f:
+        for line in f.readlines():
+            formatted_line = line.replace('\n', '').split("	")
+            cep = formatted_line[0]
+            city = formatted_line[1].split("/")[0]
+            state = formatted_line[1].split("/")[1]
+            neighborhood = formatted_line[2]
+            street = formatted_line[3]
+            address_by_cep[cep] = {
+                'city': city,
+                'state': state,
+                'neighborhood': neighborhood,
+                'street': street,
+            }
+    return address_by_cep
+
 
 def generate_fake_data():
     fake = Faker(['pt_BR'])
     Faker.seed(0)
+    random.seed(0)
 
-    # address = getAddress()
+    ceps = get_ceps()
+    addresses = get_addresses()
 
     header = [
         'nome',
@@ -26,7 +50,6 @@ def generate_fake_data():
         'bairro',
         'cidade',
         'estado',
-        'endereco',
         'cep',
         'data_de_nascimento',
         'produto',
@@ -63,17 +86,18 @@ def generate_fake_data():
         writer.writerow(header)
 
         for _ in range(100):
+            cep = random.choice(ceps)
+
             data = [
                 fake.name(),
                 fake.email(),
                 fake.ssn(),
                 fake.cellphone_number(),
-                fake.street_name(),
-                fake.bairro(),
-                fake.city(),
-                fake.estado_nome(),
-                fake.address(),
-                fake.postcode(),
+                addresses[cep]['street'],
+                addresses[cep]['neighborhood'],
+                addresses[cep]['city'],
+                addresses[cep]['state'],
+                cep,
                 fake.date_between_dates(datetime.date(1960, 1, 1), datetime.date(2012, 1, 1)),
                 random.choice(produtos),
                 fake.boolean(chance_of_getting_true=5),
