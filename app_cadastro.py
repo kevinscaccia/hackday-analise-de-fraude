@@ -21,28 +21,16 @@ sns.set(style='darkgrid')
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def main():
-    # Carregando o modelo caso utilizar o gzip para compactar o arquivo.
-    @st.cache(allow_output_mutation=True)
-    def load_modelo():
-        zip = gzip.GzipFile('rf_model.pkl', 'rb')
-        rf_model = pickle.load(zip)
-        return rf_model
-
     @st.cache(allow_output_mutation=True)
     def load_ceps():
         with open('ceps.txt') as f:
             lines = f.readlines()
         return lines
 
-    rf_model = load_modelo()
     lines = load_ceps()
 
     st.header('Formulário de Cadastro')
     st.subheader('Digite seus dados para comprar um produto GLOBO')
-
-    def local_css(file_name):
-        with open(file_name) as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
     def remote_css(url):
         st.markdown(f'<link href="{url}" rel="stylesheet">', unsafe_allow_html=True)
