@@ -30,6 +30,7 @@ HEADER = [
     'imei',
     'ip',
     'busca_email_nome',
+    'busca_email_sobrenome',
     'busca_email_ip',
     'busca_email_telefone',
     'busca_email_endereco',
@@ -92,6 +93,7 @@ def generate_fake_data():
         ip = fake.ipv4_public()
 
         busca_email_nome = random.choice(range(30, 200))
+        busca_email_sobrenome = random.choice(range(30, 200))
         busca_email_ip = random.choice(range(30, 200))
         busca_email_telefone = random.choice(range(30, 200))
         busca_email_endereco = random.choice(range(30, 200))
@@ -104,6 +106,7 @@ def generate_fake_data():
             IMEI_FRAUDULENTOS.append(imei)
             IPS_FRAUDULENDOS.append(ip)
             busca_email_nome = random.choice(range(20))
+            busca_email_sobrenome = random.choice(range(20))
             busca_email_ip = random.choice(range(20))
             busca_email_telefone = random.choice(range(20))
             busca_email_endereco = random.choice(range(20))
@@ -120,7 +123,11 @@ def generate_fake_data():
             email,
             gera_vazio(cpf, PROB_CPF_VAZIO),
             gera_vazio(phone, PROB_PHONE_VAZIO),
-            street, neighborhood, city, state, cep,
+            street,
+            neighborhood,
+            city,
+            state,
+            cep,
             fake.date_between_dates(datetime.date(1960, 1, 1), datetime.date(2012, 1, 1)),
             produto,
             fake.boolean(chance_of_getting_true=5),
@@ -129,6 +136,7 @@ def generate_fake_data():
             imei,
             ip,
             busca_email_nome,
+            busca_email_sobrenome,
             busca_email_ip,
             busca_email_telefone,
             busca_email_endereco,
@@ -152,12 +160,12 @@ def generate_fake_data():
             #
             if (gera_prob(PROB_FRAUDE_MESMO_IMEI)):
                 qual_imei = np.random.randint(len(IMEI_FRAUDULENTOS) - 1)
-                usuarios[i][len(usuarios[i]) - 3] = IMEI_FRAUDULENTOS[qual_imei]
+                usuarios[i][17] = IMEI_FRAUDULENTOS[qual_imei]
                 print(IMEI_FRAUDULENTOS[qual_imei])
             #
             if (gera_prob(PROB_FRAUDE_MESMO_IP)):
                 qual_ip = np.random.randint(len(IPS_FRAUDULENDOS) - 1)
-                usuarios[i][len(usuarios[i]) - 2] = IPS_FRAUDULENDOS[qual_ip]
+                usuarios[i][18] = IPS_FRAUDULENDOS[qual_ip]
     #    
 
     # escreve no arquivo
