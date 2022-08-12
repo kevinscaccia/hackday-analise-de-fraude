@@ -14,6 +14,7 @@ from sklearn.preprocessing import LabelEncoder
 import datetime
 from PIL import Image
 import requests
+import json
 
 sns.set(style='darkgrid')
 
@@ -119,61 +120,37 @@ def main():
         listagem_cidade_estado = str(listagem_endereco[1]).strip()
         cidade = listagem_cidade_estado.split('/')[0]
         estado = listagem_cidade_estado.split('/')[1]
-        bairoRua = ' '.join(listagem_endereco[2:])
+        bairro_rua = ' '.join(listagem_endereco[2:])
 
-        cidade = st.success(cidade)
-        bairro_rua = st.success(bairoRua)
-
-
+        st.success(cidade)
+        st.success(bairro_rua)
 
         st.markdown('')
         st.markdown('')
 
         if st.button('CADASTRAR'):
-            st.write('GloboID Score: ', {'nome': NomeCompleto,
-                                         'data_de_nascimento': dob,
-                                         'email': email,
-                                         'telefone': telefone,
-                                         'cpf': cpf,
-                                         'cep': num_cep,
-                                         'estado': estado,
-                                         'cidade': lines[cep].split('\t')[1].split('/')[0],
-                                         'bairro': bairoRua,
-                                         'rua': bairoRua,
-                                         'produto': produtos[produto],
-                                         'restringido': True,
-                                         'bloqueado': True,
-                                         'user_agent': 'Mozilla/5.0 (Windows; U; Windows CE) AppleWebKit/533.35.4 (KHTML, like Gecko) Version/4.0 Safari/533.35.4',
-                                         'imei': 1516546465})
-
-            import requests
-            import json
-
-            url = "http://localhost:5000/score"
-
-            payload = json.dumps({'nome': NomeCompleto,
-                                         'data_de_nascimento': dob,
-                                         'email': email,
-                                         'telefone': telefone,
-                                         'cpf': cpf,
-                                         'cep': num_cep,
-                                         'estado': estado,
-                                         'cidade': lines[cep].split('\t')[1].split('/')[0],
-                                         'bairro': bairoRua,
-                                         'rua': bairoRua,
-                                         'produto': produtos[produto],
-                                         'restringido': True,
-                                         'bloqueado': True,
-                                         # 'user_agent': 'Mozilla/5.0 (Windows; U; Windows CE) AppleWebKit/533.35.4 (KHTML, like Gecko) Version/4.0 Safari/533.35.4',
-                                         'imei': 1516546465})
-            headers = {
-                'Content-Type': 'application/json'
+            data = {
+                'nome': NomeCompleto,
+                'data_de_nascimento': dob,
+                'email': email,
+                'telefone': telefone,
+                'cpf': cpf,
+                'cep': num_cep,
+                'estado': estado,
+                'cidade': lines[cep].split('\t')[1].split('/')[0],
+                'bairro': bairro_rua,
+                'rua': bairro_rua,
+                'produto': produtos[produto],
+                'restringido': False,
+                'bloqueado': False,
+                'imei': 1516546465
             }
 
-            response = requests.request("POST", url, headers=headers, data=payload)
+            st.write('GloboID Score: ', data)
 
-            print(response.text)
-            # request.headers.get('User-Agent')
+            headers = {'Content-Type': 'application/json'}
+            requests.request("POST", "http://0.0.0.0:5000/score", headers=headers, data=json.dumps(data))
+
 
 if __name__ == '__main__':
     main()

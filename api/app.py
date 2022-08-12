@@ -44,8 +44,10 @@ def getScore():
         200,
     )
     response.headers["Content-Type"] = "application/json"
-    print(vars(req))
+
+    app.logger.info(vars(req))
     return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)

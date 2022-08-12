@@ -3,3 +3,9 @@ Faker
 flask
 flask_restful
 flask_cors
+pandas
+plotly
+seaborn
+streamlit
+sklearn
+joblib
