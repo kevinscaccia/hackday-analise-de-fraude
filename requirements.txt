@@ -1,2 +1,5 @@
 numpy
-fake
+Faker
+flask
+flask_restful
+flask_cors

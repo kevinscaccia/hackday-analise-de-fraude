@@ -5,31 +5,9 @@ import numpy as np
 from faker import Faker
 from util import *
 
-QUANTIDADE_REGISTROS = 100
+QUANTIDADE_REGISTROS = 10000
 PROB_FRAUDULENTO = 0.2
 SEED = 77
-
-PRODUTOS = [
-    'Globoplay + canais ao vivo e Telecine',
-    'Starzplay',
-    'Deezer Premium',
-    'Cartola PRO',
-    'Globoplay',
-    'Globoplay + canais ao vivo e Premiere',
-    'Disney +',
-    'Premiere',
-    'Globoplay e discovery +',
-    'discovery +',
-    'Globo Mais',
-    'Globoplay e Disney +',
-    'Combate',
-    'Globoplay e Premiere',
-    'Giga Gloob',
-    'Globoplay + canais ao vivo',
-    'Globoplay e Telecine',
-    'Globoplay e Starzplay',
-    'Globoplay + canais ao vivo e Disney +'
-]
 
 HEADER = [
     'id',
@@ -49,7 +27,16 @@ HEADER = [
     'restringido',  # está com dados na lista restritiva
     'bloqueado',  # está bloqueado
     'user_agent',
-    'imei'
+    'imei',
+    'ip',
+    'busca_email_nome',
+    'busca_email_sobrenome',
+    'busca_email_ip',
+    'busca_email_telefone',
+    'busca_email_endereco',
+    'busca_ip_telefone',
+    'busca_ip_nome',
+    'busca_telefone_nome'
 ]
 
 PROB_CPF_VAZIO = 1 - 0.2
@@ -59,6 +46,7 @@ PROB_PHONE_VAZIO = 1 - 0.6
 PROB_ENDERECO_VAZIO = 1 - 0.6
 PROB_FRAUDE_MESMO_CPF = 0.2
 PROB_FRAUDE_MESMO_IMEI = 0.3
+PROB_FRAUDE_MESMO_IP = 0.3
 PROB_TEM_CEP = 0.6
 
 
@@ -74,6 +62,7 @@ def generate_fake_data():
     addresses = get_addresses()
     CPF_FRAUDULENTOS = []
     IMEI_FRAUDULENTOS = []
+    IPS_FRAUDULENDOS = []
 
     usuarios = []
 
@@ -101,10 +90,30 @@ def generate_fake_data():
 
         cpf = fake.ssn()
         imei = get_imei(phone)
+        ip = fake.ipv4_public()
+
+        busca_email_nome = random.choice(range(30, 200))
+        busca_email_sobrenome = random.choice(range(30, 200))
+        busca_email_ip = random.choice(range(30, 200))
+        busca_email_telefone = random.choice(range(30, 200))
+        busca_email_endereco = random.choice(range(30, 200))
+        busca_ip_telefone = random.choice(range(30, 200))
+        busca_ip_nome = random.choice(range(30, 200))
+        busca_telefone_nome = random.choice(range(30, 200))
 
         if is_fraude:
             CPF_FRAUDULENTOS.append(cpf)
             IMEI_FRAUDULENTOS.append(imei)
+            IPS_FRAUDULENDOS.append(ip)
+            busca_email_nome = random.choice(range(20))
+            busca_email_sobrenome = random.choice(range(20))
+            busca_email_ip = random.choice(range(20))
+            busca_email_telefone = random.choice(range(20))
+            busca_email_endereco = random.choice(range(20))
+            busca_ip_telefone = random.choice(range(20))
+            busca_ip_nome = random.choice(range(20))
+            busca_telefone_nome = random.choice(range(20))
+
         #
         data = [
             usuario_i,
@@ -114,18 +123,32 @@ def generate_fake_data():
             email,
             gera_vazio(cpf, PROB_CPF_VAZIO),
             gera_vazio(phone, PROB_PHONE_VAZIO),
-            street, neighborhood, city, state, cep,
+            street,
+            neighborhood,
+            city,
+            state,
+            cep,
             fake.date_between_dates(datetime.date(1960, 1, 1), datetime.date(2012, 1, 1)),
             produto,
             fake.boolean(chance_of_getting_true=5),
             fake.boolean(chance_of_getting_true=5),
             fake.user_agent(),
-            imei
+            imei,
+            ip,
+            busca_email_nome,
+            busca_email_sobrenome,
+            busca_email_ip,
+            busca_email_telefone,
+            busca_email_endereco,
+            busca_ip_telefone,
+            busca_ip_nome,
+            busca_telefone_nome
         ]
         usuarios.append(data)
     #
     CPF_FRAUDULENTOS = list(set(CPF_FRAUDULENTOS))
     IMEI_FRAUDULENTOS = list(set(IMEI_FRAUDULENTOS))
+    IPS_FRAUDULENDOS = list(set(IPS_FRAUDULENDOS))
 
     # todos fraude
     for i in range(len(usuarios)):
@@ -137,8 +160,12 @@ def generate_fake_data():
             #
             if (gera_prob(PROB_FRAUDE_MESMO_IMEI)):
                 qual_imei = np.random.randint(len(IMEI_FRAUDULENTOS) - 1)
-                usuarios[i][-2] = IMEI_FRAUDULENTOS[qual_imei]
-                print(f"{i}")
+                usuarios[i][17] = IMEI_FRAUDULENTOS[qual_imei]
+                print(IMEI_FRAUDULENTOS[qual_imei])
+            #
+            if (gera_prob(PROB_FRAUDE_MESMO_IP)):
+                qual_ip = np.random.randint(len(IPS_FRAUDULENDOS) - 1)
+                usuarios[i][18] = IPS_FRAUDULENDOS[qual_ip]
     #    
 
     # escreve no arquivo
