@@ -29,7 +29,7 @@ def getScore():
     req.produto = request_data['produto']
     req.restringido = request_data['restringido']
     req.bloqueado = request_data['bloqueado']
-    req.user_agent = request_data['user_agent']
+    req.user_agent = request.headers.get('User-Agent')#request_data['user_agent']
     req.imei = request_data['imei']
 
 
@@ -44,6 +44,7 @@ def getScore():
         200,
     )
     response.headers["Content-Type"] = "application/json"
+    print(vars(req))
     return response
 
 if __name__ == '__main__':
