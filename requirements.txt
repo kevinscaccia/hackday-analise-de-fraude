@@ -7,5 +7,7 @@ pandas
 plotly
 seaborn
 streamlit
-sklearn
+scikit-learn==1.0.2
 joblib
+Unidecode
+jaro-winkler

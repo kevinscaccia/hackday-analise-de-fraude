@@ -1,4 +1,3 @@
 class ResponseModel:
-    nome = ""
-    email = ""
     score = 0
+    score_flag = False

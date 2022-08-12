@@ -20,6 +20,7 @@ sns.set(style='darkgrid')
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
+
 def main():
     @st.cache(allow_output_mutation=True)
     def load_ceps():
@@ -134,10 +135,10 @@ def main():
                 'imei': 1516546465
             }
 
-            st.write('GloboID Score: ', data)
-
             headers = {'Content-Type': 'application/json'}
-            requests.request("POST", "http://0.0.0.0:5000/score", headers=headers, data=json.dumps(data))
+            resp = requests.request("POST", "http://0.0.0.0:5000/score", headers=headers, data=json.dumps(data))
+
+            st.write('GloboID Score: ', resp.json())
 
 
 if __name__ == '__main__':
