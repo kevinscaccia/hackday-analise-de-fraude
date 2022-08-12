@@ -15,7 +15,27 @@ PROB_EMAIL_FRAUDE_NUMERO_NO_EMAIL = 0.4
 MAX_NUMEROS_EMAIL_FRAUDE = 9999999
 DOMINIOS_VALIDOS = ['gmail.com','globo.com','outlook.com','bol.com','hotmail.com','yahoo.com']
 
-
+PRODUTOS = [
+    'Globoplay + canais ao vivo e Telecine',
+    'Starzplay',
+    'Deezer Premium',
+    'Cartola PRO',
+    'Globoplay',
+    'Globoplay + canais ao vivo e Premiere',
+    'Disney +',
+    'Premiere',
+    'Globoplay e discovery +',
+    'discovery +',
+    'Globo Mais',
+    'Globoplay e Disney +',
+    'Combate',
+    'Globoplay e Premiere',
+    'Giga Gloob',
+    'Globoplay + canais ao vivo',
+    'Globoplay e Telecine',
+    'Globoplay e Starzplay',
+    'Globoplay + canais ao vivo e Disney +'
+]
 
 def gera_nome_e_email(fake, produto, fraude=False):
   first_name = fake.first_name()
