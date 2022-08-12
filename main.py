@@ -92,27 +92,32 @@ def generate_fake_data():
         imei = get_imei(phone)
         ip = fake.ipv4_public()
 
-        busca_email_nome = random.choice(range(30, 200))
-        busca_email_sobrenome = random.choice(range(30, 200))
-        busca_email_ip = random.choice(range(30, 200))
-        busca_email_telefone = random.choice(range(30, 200))
-        busca_email_endereco = random.choice(range(30, 200))
-        busca_ip_telefone = random.choice(range(30, 200))
-        busca_ip_nome = random.choice(range(30, 200))
-        busca_telefone_nome = random.choice(range(30, 200))
+        defaul_range = 40
+        defaul_range_top = defaul_range + 20
+        range_limit = 100
+
+        busca_email_nome = random.choice(range(defaul_range, range_limit))
+        busca_email_sobrenome = random.choice(range(defaul_range, range_limit))
+        busca_email_ip = random.choice(range(defaul_range, range_limit))
+        busca_email_telefone = random.choice(range(defaul_range, range_limit))
+        busca_email_endereco = random.choice(range(defaul_range, range_limit))
+        busca_ip_telefone = random.choice(range(defaul_range, range_limit))
+        busca_ip_nome = random.choice(range(defaul_range, range_limit))
+        busca_telefone_nome = random.choice(range(defaul_range, range_limit))
 
         if is_fraude:
             CPF_FRAUDULENTOS.append(cpf)
             IMEI_FRAUDULENTOS.append(imei)
             IPS_FRAUDULENDOS.append(ip)
-            busca_email_nome = random.choice(range(20))
-            busca_email_sobrenome = random.choice(range(20))
-            busca_email_ip = random.choice(range(20))
-            busca_email_telefone = random.choice(range(20))
-            busca_email_endereco = random.choice(range(20))
-            busca_ip_telefone = random.choice(range(20))
-            busca_ip_nome = random.choice(range(20))
-            busca_telefone_nome = random.choice(range(20))
+
+            busca_email_nome = random.choice(range(defaul_range_top))
+            busca_email_sobrenome = random.choice(range(defaul_range_top))
+            busca_email_ip = random.choice(range(defaul_range_top))
+            busca_email_telefone = random.choice(range(defaul_range_top))
+            busca_email_endereco = random.choice(range(defaul_range_top))
+            busca_ip_telefone = random.choice(range(defaul_range_top))
+            busca_ip_nome = random.choice(range(defaul_range_top))
+            busca_telefone_nome = random.choice(range(defaul_range_top))
 
         #
         data = [
